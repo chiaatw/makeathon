@@ -46,6 +46,10 @@ class Product(Base):
     Contains SKUs following the pattern:
     RM-C{company_id}-{substance}-{variant}-{hash}
     Example: RM-C1-vitamin-d3-cholecalciferol-1000iu-15a7d2b1
+
+    Includes normalized fields for fragmentation analysis:
+    - canonical_material_name: Standardized material identifier
+    - supplier_names: Supplier information
     """
     __tablename__ = 'Product'
 
@@ -53,6 +57,8 @@ class Product(Base):
     SKU = Column(String, nullable=False)
     CompanyId = Column(Integer, ForeignKey('Company.Id'), nullable=False)
     Type = Column(String, nullable=False)
+    canonical_material_name = Column(String, nullable=True)
+    supplier_names = Column(String, nullable=True)
 
     # Relationships
     company = relationship("Company", back_populates="products")
@@ -144,3 +150,20 @@ class SupplierProduct(Base):
 
     def __repr__(self):
         return f"<SupplierProduct(SupplierId={self.SupplierId}, ProductId={self.ProductId})>"
+
+
+class CanonicalMaterialSupplierMap(Base):
+    """
+    Canonical Material-Supplier mapping model.
+
+    Maps normalized material names to suppliers for fragmentation analysis.
+    Composite primary key of (canonical_material_name, supplier_id).
+    """
+    __tablename__ = 'canonical_material_supplier_map'
+
+    canonical_material_name = Column(String, primary_key=True, nullable=False)
+    supplier_id = Column(Integer, primary_key=True, nullable=False)
+    supplier_name = Column(String, nullable=False)
+
+    def __repr__(self):
+        return f"<CanonicalMaterialSupplierMap(material='{self.canonical_material_name}', supplier='{self.supplier_name}')>"
