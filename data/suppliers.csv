@@ -1,0 +1,4 @@
+supplier,country,current_customer_count,certificates
+DSM,Netherlands,5,"cGMP,ISO 9001,ISO 14644"
+BASF,Germany,4,"GMP,ISO 9001"
+Prinova USA,USA,2,GMP

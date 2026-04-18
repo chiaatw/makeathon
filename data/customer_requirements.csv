@@ -1,0 +1,4 @@
+company_name,quality_tier,certificates_required,potency_range,dissolution_min,impurities_max
+PharmaCorp,PHARMA_GRADE,"cGMP,ISO 9001,ISO 14644",97.0-103.0,90,0.05
+FoodSupplementCo,SUPPLEMENT_GRADE,"GMP,ISO 9001",95.0-105.0,75,0.1
+Cosmetics Inc,COSMETIC_GRADE,GMP,90.0-110.0,0,0.2
