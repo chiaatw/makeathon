@@ -6,20 +6,22 @@ import { cn } from "@/lib/utils";
 export const AnalysisStepper = ({
   currentStep,
   done,
+  steps = ANALYSIS_STEPS,
 }: {
   currentStep: number;
   done: boolean;
+  steps?: readonly string[];
 }) => (
   <Card className="p-7 shadow-elegant border-border/70 bg-card">
     <div className="flex items-baseline justify-between mb-6">
       <h3 className="text-base font-semibold tracking-tight">Analysis pipeline</h3>
       <span className="text-xs text-muted-foreground">
-        {done ? "Completed" : `Step ${Math.min(currentStep + 1, ANALYSIS_STEPS.length)} of ${ANALYSIS_STEPS.length}`}
+        {done ? "Completed" : `Step ${Math.min(currentStep + 1, steps.length)} of ${steps.length}`}
       </span>
     </div>
 
     <ol className="relative">
-      {ANALYSIS_STEPS.map((step, i) => {
+      {steps.map((step, i) => {
         const isDone = done || i < currentStep;
         const isActive = !done && i === currentStep;
         const isPending = !done && i > currentStep;
@@ -30,7 +32,7 @@ export const AnalysisStepper = ({
             className="relative flex items-start gap-4 pb-5 last:pb-0 animate-step-in"
             style={{ animationDelay: `${i * 60}ms` }}
           >
-            {i < ANALYSIS_STEPS.length - 1 && (
+            {i < steps.length - 1 && (
               <div
                 className={cn(
                   "absolute left-[15px] top-8 bottom-0 w-px transition-colors",

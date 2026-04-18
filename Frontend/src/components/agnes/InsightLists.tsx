@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { EvidenceItem } from "@/lib/agnes-data";
 import { AlertCircle, FileText, Link2, Lightbulb, Database, ShieldCheck } from "lucide-react";
 
 const SectionCard = ({
@@ -42,45 +43,62 @@ const Bullet = ({ children, tone = "default" }: { children: React.ReactNode; ton
   </li>
 );
 
-export const ReasonList = () => (
+export const ReasonList = ({ reasons }: { reasons?: string[] }) => (
   <SectionCard title="Why this recommendation" icon={Lightbulb}>
     <ul className="divide-y divide-border/50">
-      <Bullet>High functional similarity to reference ingredient profile</Bullet>
-      <Bullet>Supplier provides food-grade compatible material</Bullet>
-      <Bullet>Matches user-defined priorities (Quality: High, Price: High)</Bullet>
-      <Bullet>Similar ingredient usage pattern across comparable companies</Bullet>
+      {(reasons && reasons.length > 0 ? reasons : [
+        "High functional similarity to reference ingredient profile",
+        "Supplier provides food-grade compatible material",
+        "Matches user-defined priorities (Quality: High, Price: High)",
+        "Similar ingredient usage pattern across comparable companies",
+      ]).map((reason) => (
+        <Bullet key={reason}>{reason}</Bullet>
+      ))}
     </ul>
   </SectionCard>
 );
 
-export const RiskList = () => (
+export const RiskList = ({ risks }: { risks?: string[] }) => (
   <SectionCard title="Risks & uncertainty" icon={AlertCircle} tone="warning">
     <ul className="divide-y divide-border/50">
-      <Bullet tone="warning">Missing certification documents (ISO 22000)</Bullet>
-      <Bullet tone="warning">Limited external evidence sources available</Bullet>
-      <Bullet tone="warning">Compliance status not fully verified</Bullet>
-      <Bullet tone="warning">Supplier documentation incomplete for batch traceability</Bullet>
+      {(risks && risks.length > 0 ? risks : [
+        "Missing certification documents (ISO 22000)",
+        "Limited external evidence sources available",
+        "Compliance status not fully verified",
+        "Supplier documentation incomplete for batch traceability",
+      ]).map((risk) => (
+        <Bullet key={risk} tone="warning">{risk}</Bullet>
+      ))}
     </ul>
   </SectionCard>
 );
 
-const evidence = [
+const defaultEvidence: Array<EvidenceItem & { icon: any }> = [
   { icon: Link2, title: "Supplier product page", meta: "supplierb.com/citric-acid", tag: "External" },
   { icon: Database, title: "Internal DB match", meta: "BOM record · 4 prior usages", tag: "Internal" },
   { icon: ShieldCheck, title: "Regulatory guidance", meta: "FDA 21 CFR §184.1033", tag: "Regulatory" },
   { icon: FileText, title: "Technical description", meta: "Spec sheet v2.1", tag: "Document" },
 ];
 
-export const EvidenceList = () => (
+const iconByTag = {
+  External: Link2,
+  Internal: Database,
+  Regulatory: ShieldCheck,
+  Document: FileText,
+} as const;
+
+export const EvidenceList = ({ items }: { items?: EvidenceItem[] }) => (
   <SectionCard title="Evidence sources" icon={FileText}>
     <div className="grid grid-cols-2 gap-2.5">
-      {evidence.map((e) => (
+      {(items && items.length > 0 ? items : defaultEvidence).map((e) => {
+        const Icon = (e as any).icon ?? iconByTag[e.tag];
+        return (
         <div
           key={e.title}
           className="flex items-start gap-3 p-3 rounded-lg border border-border/60 bg-secondary/30 hover:border-primary/40 hover:bg-secondary/60 transition-all ease-smooth cursor-default"
         >
           <div className="h-7 w-7 rounded-md bg-card text-primary flex items-center justify-center shrink-0 border border-border/60">
-            <e.icon className="h-3.5 w-3.5" />
+            <Icon className="h-3.5 w-3.5" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-sm font-medium text-foreground truncate">{e.title}</div>
@@ -90,7 +108,8 @@ export const EvidenceList = () => (
             {e.tag}
           </span>
         </div>
-      ))}
+        );
+      })}
     </div>
   </SectionCard>
 );

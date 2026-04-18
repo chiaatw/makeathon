@@ -6,9 +6,17 @@ import { Boxes } from "lucide-react";
 export const InputCard = ({
   data,
   onChange,
+  companies = COMPANIES,
+  products = PRODUCTS,
+  ingredients = INGREDIENTS,
+  suppliers = SUPPLIERS,
 }: {
   data: SourcingCase;
   onChange: (patch: Partial<SourcingCase>) => void;
+  companies?: readonly string[];
+  products?: readonly string[];
+  ingredients?: readonly string[];
+  suppliers?: readonly string[];
 }) => (
   <Card className="p-7 shadow-elegant border-border/70 bg-card animate-fade-up">
     <div className="flex items-start gap-3 mb-6">
@@ -22,14 +30,14 @@ export const InputCard = ({
     </div>
 
     <div className="grid grid-cols-2 gap-5">
-      <SelectField label="Company" value={data.company} onChange={(v) => onChange({ company: v })} options={COMPANIES} />
-      <SelectField label="Product" value={data.product} onChange={(v) => onChange({ product: v })} options={PRODUCTS} />
-      <SelectField label="Ingredient" value={data.ingredient} onChange={(v) => onChange({ ingredient: v })} options={INGREDIENTS} />
+      <SelectField label="Company" value={data.company} onChange={(v) => onChange({ company: v })} options={companies} />
+      <SelectField label="Product" value={data.product} onChange={(v) => onChange({ product: v })} options={products} />
+      <SelectField label="Ingredient" value={data.ingredient} onChange={(v) => onChange({ ingredient: v })} options={ingredients} />
       <SelectField
         label="Supplier candidate"
         value={data.supplier}
         onChange={(v) => onChange({ supplier: v })}
-        options={SUPPLIERS}
+        options={suppliers}
         hint="Optional — leave default to auto-select"
       />
     </div>

@@ -1,9 +1,9 @@
 import { Card } from "@/components/ui/card";
-import { SourcingCase } from "@/lib/agnes-data";
+import { RecommendationStatus, SourcingCase } from "@/lib/agnes-data";
 import { AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Status = "Suitable" | "Suitable with Risk" | "Not Recommended";
+type Status = RecommendationStatus;
 
 const statusConfig: Record<Status, { icon: any; color: string; bg: string; ring: string }> = {
   Suitable: {
@@ -30,10 +30,12 @@ export const RecommendationCard = ({
   data,
   status = "Suitable with Risk",
   confidence = 78,
+  recommendationText,
 }: {
   data: SourcingCase;
   status?: Status;
   confidence?: number;
+  recommendationText?: string;
 }) => {
   const cfg = statusConfig[status];
   const Icon = cfg.icon;
@@ -61,8 +63,8 @@ export const RecommendationCard = ({
               <span className="text-xs text-muted-foreground">Final recommendation</span>
             </div>
             <h2 className="text-xl font-semibold tracking-tight text-foreground leading-snug">
-              {data.supplier} appears to be a viable candidate for {data.ingredient.replace("-", " ")} based on
-              functional similarity and available evidence, but certification verification remains incomplete.
+              {recommendationText ??
+                `${data.supplier} appears to be a viable candidate for ${data.ingredient.replace("-", " ")} based on functional similarity and available evidence, but certification verification remains incomplete.`}
             </h2>
           </div>
 

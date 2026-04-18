@@ -20,6 +20,53 @@ export interface SourcingCase {
   preferences: Preferences;
 }
 
+export interface EnumsResponse {
+  companies: string[];
+  products: string[];
+  ingredients: string[];
+  suppliers: string[];
+  certifications: string[];
+  analysis_steps: string[];
+}
+
+export type RecommendationStatus = "Suitable" | "Suitable with Risk" | "Not Recommended";
+export type TradeoffTone = "good" | "neutral" | "warn";
+export type TradeoffLevel = "Low" | "Lower" | "Medium" | "High";
+
+export interface TradeoffItem {
+  label: string;
+  value: TradeoffLevel;
+  tone: TradeoffTone;
+}
+
+export interface EvidenceItem {
+  title: string;
+  meta: string;
+  tag: "External" | "Internal" | "Regulatory" | "Document";
+}
+
+export interface AnalysisResult {
+  recommendation: {
+    status: RecommendationStatus;
+    confidence: number;
+    recommendation_text: string;
+  };
+  reasons: string[];
+  risks: string[];
+  evidence: EvidenceItem[];
+  tradeoffs: TradeoffItem[];
+  raw: Record<string, unknown>;
+}
+
+export interface AnalysisStatusResponse {
+  analysis_id: string;
+  status: "queued" | "running" | "completed" | "failed";
+  current_step: number;
+  total_steps: number;
+  result?: AnalysisResult;
+  error?: string | null;
+}
+
 export const ANALYSIS_STEPS: string[] = [
   "Compliance verification",
   "Quality assessment",

@@ -66,9 +66,11 @@ const CertChip = ({
 export const PreferencesCard = ({
   prefs,
   onChange,
+  certifications = CERTIFICATIONS,
 }: {
   prefs: Preferences;
   onChange: (patch: Partial<Preferences>) => void;
+  certifications?: readonly string[];
 }) => {
   const toggleCert = (c: string) => {
     onChange({
@@ -132,7 +134,7 @@ export const PreferencesCard = ({
             <Label className="text-sm font-medium">Required certifications</Label>
           </div>
           <div className="flex flex-wrap gap-2">
-            {CERTIFICATIONS.map((c) => (
+            {certifications.map((c) => (
               <CertChip key={c} label={c} active={prefs.certifications.includes(c)} onClick={() => toggleCert(c)} />
             ))}
           </div>

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { SourcingCase } from "@/lib/agnes-data";
+import { EnumsResponse, SourcingCase } from "@/lib/agnes-data";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { ContextSummary } from "./ContextSummary";
 import { InputCard } from "./InputCard";
@@ -9,10 +9,12 @@ export const InputScreen = ({
   data,
   setData,
   onRun,
+  enums,
 }: {
   data: SourcingCase;
   setData: (d: SourcingCase) => void;
   onRun: () => void;
+  enums?: EnumsResponse;
 }) => {
   const updateCase = (patch: Partial<SourcingCase>) => setData({ ...data, ...patch });
   const updatePrefs = (patch: Partial<SourcingCase["preferences"]>) =>
@@ -33,8 +35,19 @@ export const InputScreen = ({
 
       <div className="grid grid-cols-3 gap-7">
         <div className="col-span-2 space-y-6">
-          <InputCard data={data} onChange={updateCase} />
-          <PreferencesCard prefs={data.preferences} onChange={updatePrefs} />
+          <InputCard
+            data={data}
+            onChange={updateCase}
+            companies={enums?.companies}
+            products={enums?.products}
+            ingredients={enums?.ingredients}
+            suppliers={enums?.suppliers}
+          />
+          <PreferencesCard
+            prefs={data.preferences}
+            onChange={updatePrefs}
+            certifications={enums?.certifications}
+          />
 
           <div className="flex items-center justify-between p-5 rounded-xl border border-border/70 bg-card shadow-elegant animate-fade-up" style={{ animationDelay: "180ms" }}>
             <div>
