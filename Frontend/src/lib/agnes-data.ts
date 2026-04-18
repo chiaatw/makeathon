@@ -252,6 +252,9 @@ export const CERTIFICATIONS: string[] = [
   "Organic Certified",
   "Third-party Tested",
   "Fair Trade",
+  "Vegan",
+  "Halal",
+  "Kosher"
 ];
 
 export const DEFAULT_CASE: SourcingCase = {

@@ -35,6 +35,7 @@ export const AnalysisScreen = ({
           body: JSON.stringify({
             company: data.company,
             product_sku: data.product,
+            certifications: data.preferences.certifications || []
           }),
         });
 

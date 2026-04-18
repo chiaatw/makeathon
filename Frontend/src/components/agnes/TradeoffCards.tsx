@@ -38,7 +38,7 @@ export const TradeoffCards = ({ backendData }: { backendData?: any }) => {
         <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
           <div className="flex items-center gap-3 mb-4">
             <Package className="w-5 h-5 text-primary" />
-            <div className="font-semibold text-primary-foreground text-md">
+            <div className="font-semibold text-primary text-md">
               Required Direct Compliance for{" "}
               {parsedFg.product_sku || "Main Product"}
             </div>
@@ -78,19 +78,23 @@ export const TradeoffCards = ({ backendData }: { backendData?: any }) => {
                 <div className="text-sm uppercase tracking-wide font-bold text-muted-foreground mb-3">
                   Raw Material: {rmItem.raw_material_sku || "Unknown"}
                 </div>
-                        <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   {suppliers.map((s: any, sIdx: number) => {
                     const matchCount = (s.fulfilled_compliance || []).length;
                     const isMatched = matchCount > 0;
-                    
+
                     return (
                       <div
                         key={sIdx}
                         className={`rounded-lg bg-secondary/30 border p-4 ${isMatched ? "border-success/50 bg-success/5 shadow-sm" : "border-destructive/30 opacity-70"}`}
                       >
                         <div className="flex items-center gap-2 mb-2">
-                          <Factory className={`w-4 h-4 ${isMatched ? "text-success" : "text-muted-foreground"}`} />
-                          <span className={`font-semibold ${isMatched ? "text-success-foreground" : "text-foreground"}`}>
+                          <Factory
+                            className={`w-4 h-4 ${isMatched ? "text-success" : "text-muted-foreground"}`}
+                          />
+                          <span
+                            className={`font-semibold ${isMatched ? "text-success" : "text-foreground"}`}
+                          >
                             {s.supplier}
                           </span>
                         </div>

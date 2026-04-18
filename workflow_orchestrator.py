@@ -104,10 +104,15 @@ async def run_query(app, prompt, user_id):
         return res.strip()
     return ""
 
-async def fetch_fg_compliance(fg):
+async def fetch_fg_compliance(fg, certifications=[]):
+    cert_text = ""
+    if certifications:
+        cert_text = f" This product must strictly comply with the following certifications: {', '.join(certifications)}. "
+    
     prompt = (
         f"Research the compliance requirements for the finished product manufactured by '{fg['company']}'. "
-        f"The product SKU/Name is '{fg['sku']}' (canonical name: '{fg['canonical_name']}'). "
+        f"The product SKU/Name is '{fg['sku']}' (canonical name: '{fg['canonical_name']}')."
+        f"{cert_text}"
         f"Output ONLY a raw JSON strictly formatted as follows, without markdown tags: "
         f"{{ \"product_sku\": \"{fg['sku']}\", \"required_compliance\": [\"list of requirements\"] }}"
     )

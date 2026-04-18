@@ -19,6 +19,7 @@ app.add_middleware(
 class AnalyzeRequest(BaseModel):
     company: str
     product_sku: str
+    certifications: list[str] = []
 
 @app.get("/api/products")
 async def get_products(company: str):
@@ -47,7 +48,7 @@ async def analyze(req: AnalyzeRequest):
     fg = target_fgs[0]
     
     # We pass the full fg object to fetch_fg_compliance
-    fg_task = asyncio.create_task(fetch_fg_compliance(fg))
+    fg_task = asyncio.create_task(fetch_fg_compliance(fg, req.certifications))
     
     rm_tasks = []
     

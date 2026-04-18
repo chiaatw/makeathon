@@ -31,15 +31,59 @@ const statusConfig: Record<
 
 export const RecommendationCard = ({
   data,
-  status = "Suitable with Risk",
-  confidence = 78,
+  backendData,
 }: {
   data: SourcingCase;
-  status?: Status;
-  confidence?: number;
+  backendData?: any;
 }) => {
-  const cfg = statusConfig[status];
-  const Icon = cfg.icon;
+  let rms = backendData?.raw_materials_comparison || [];
+  let parsedRms: any[] = [];
+  try {
+    parsedRms = rms.map((rm: any) =>
+      typeof rm === "string" ? JSON.parse(rm) : rm,
+    );
+  } catch (e) {}
+
+  let totalRMs = parsedRms.length;
+  let rmsWithAtLeastOneCompliantSupplier = 0;
+
+  parsedRms.forEach((rmItem) => {
+    const suppliers = rmItem.supplier_comparison || [];
+    const hasCompliant = suppliers.some(
+      (s: any) => (s.fulfilled_compliance || []).length > 0,
+    );
+    if (hasCompliant) {
+      rmsWithAtLeastOneCompliantSupplier++;
+    }
+  });
+
+  let status: Status = "Suitable with Risk";
+  let colorTheme = statusConfig["Suitable with Risk"];
+  let message = "";
+  let confidence = 0;
+
+  if (totalRMs === 0) {
+    status = "Suitable with Risk";
+    message = `No active raw material compliance data returned for ${data.product}. Proceed with manual verification.`;
+    confidence = 50;
+  } else if (rmsWithAtLeastOneCompliantSupplier === totalRMs) {
+    status = "Suitable";
+    colorTheme = statusConfig["Suitable"];
+    message = `The ${data.product} from ${data.company} appears highly viable. All ${totalRMs} major sub-components have at least one valid substitute supplier verifying strict compliance limits.`;
+    confidence = 94;
+  } else if (rmsWithAtLeastOneCompliantSupplier > 0) {
+    status = "Suitable with Risk";
+    message = `The ${data.product} finished good from ${data.company} has mixed viability. Only ${rmsWithAtLeastOneCompliantSupplier} out of ${totalRMs} raw materials have a cleanly compliant supplier available. Expect sourcing bottlenecks.`;
+    confidence =
+      Math.round((rmsWithAtLeastOneCompliantSupplier / totalRMs) * 100) - 10;
+  } else {
+    status = "Not Recommended";
+    colorTheme = statusConfig["Not Recommended"];
+    message = `We strongly advise against sourcing ${data.product} right now. 0 out of ${totalRMs} required raw materials have compliance-verified suppliers. Significant supply chain block.`;
+    confidence = 22;
+  }
+
+  const Icon = colorTheme.icon;
 
   return (
     <Card className="relative overflow-hidden border-border/70 shadow-elevated bg-card animate-fade-up">
@@ -49,11 +93,11 @@ export const RecommendationCard = ({
           <div
             className={cn(
               "h-14 w-14 rounded-xl flex items-center justify-center ring-8",
-              cfg.bg,
-              cfg.ring,
+              colorTheme.bg,
+              colorTheme.ring,
             )}
           >
-            <Icon className={cn("h-7 w-7", cfg.color)} />
+            <Icon className={cn("h-7 w-7", colorTheme.color)} />
           </div>
 
           <div className="flex-1 min-w-0">
@@ -61,8 +105,8 @@ export const RecommendationCard = ({
               <span
                 className={cn(
                   "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold",
-                  cfg.bg,
-                  cfg.color,
+                  colorTheme.bg,
+                  colorTheme.color,
                 )}
               >
                 {status}
@@ -72,9 +116,7 @@ export const RecommendationCard = ({
               </span>
             </div>
             <h2 className="text-xl font-semibold tracking-tight text-foreground leading-snug">
-              The {data.product} finished good from {data.company} appears
-              viable based on functional similarity and available evidence, but
-              certification verification remains incomplete.
+              {message}
             </h2>
           </div>
 
