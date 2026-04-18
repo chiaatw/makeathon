@@ -1,166 +1,124 @@
-# Makeathon - Enhanced Compliance Agent
+# SupplySkip - AI-Powered Compliance Intelligence
 
-Makeathon spherecast challenge - Enhanced compliance checking system for supplier evaluation.
+**Google ADK + Gemini 2.5 Flash** powered supplier compliance system with real-time web intelligence and evidence caching.
 
-## Enhanced Compliance Agent
+## Overview
 
-A sophisticated, plugin-based compliance checking system for supplier evaluation with multi-source data aggregation and user-configurable prioritization.
+SupplySkip uses Google's Agent Development Kit (ADK) with Gemini 2.5 Flash to provide intelligent, real-time compliance checking for supplier evaluation. The system combines live web search, direct supplier website analysis, and sophisticated evidence caching to deliver comprehensive compliance insights.
 
-### Features
+## Architecture
 
-- **Plugin Architecture**: Extensible compliance checking modules (certificates, pricing, quality, etc.)
-- **Multi-Source Data**: Intelligent aggregation from CSV, JSON, and other data sources
-- **Configurable Scoring**: User-defined weights and prioritization for compliance factors
-- **Backward Compatibility**: Seamless integration with existing SimpleComplianceChecker interface
-- **Transparency**: Detailed reasoning chains and confidence scoring
+### Core Technologies
 
-### Quick Start
+- **Google ADK (Agent Development Kit)**: Multi-agent orchestration framework
+- **Gemini 2.5 Flash**: High-performance language model for compliance analysis
+- **Live Web Search**: Real-time Google Search integration
+- **Evidence Cache**: Persistent supplier compliance data storage
 
-#### Basic Usage (Backward Compatible)
+### Agent System
+
+The system operates through two specialized agents:
+
+#### 1. ProducerAgent (`req_gatherer.py`)
+- **Purpose**: Discovers EU/US compliance requirements for raw materials
+- **Model**: Gemini 2.5 Flash
+- **Capabilities**:
+  - Live Google Search for regulatory requirements
+  - URL content extraction from regulatory websites
+  - Compliance standard identification (EFSA, 21 CFR 111, cGMP)
+
+#### 2. SupplierAgent (`req_gatherer.py`)  
+- **Purpose**: Analyzes specific supplier websites for compliance data
+- **Model**: Gemini 2.5 Flash
+- **Capabilities**:
+  - Direct supplier website content analysis
+  - Compliance certification extraction
+  - Real-time supplier data validation
+
+### Evidence Cache System
+
+The evidence cache (`backend/enrichment/supplier_cache.py`) provides persistent storage for supplier compliance intelligence:
+
+- **SupplierEvidence**: Structured compliance data (certifications, pricing, MOQ, lead times)
+- **Query Interface**: Fast retrieval by supplier, substance, or certification
+- **Cost Analysis**: Price range extraction and cost-effectiveness ranking
+- **Premium Filtering**: USP and quality certification filtering
+
+## Quick Start
+
+### Basic Usage
 
 ```python
-from agents.enhanced_compliance_agent import call_compliance_agent
+from req_gatherer import ProducerAgent, SupplierAgent
 
-# Works exactly like the original SimpleComplianceChecker
-result = call_compliance_agent("Vitamin D3", "DSM", "PharmaCorp")
+# Initialize agents
+producer = ProducerAgent()
+producer.set_up()
 
-print(f"Status: {result.compliance_status}")
-print(f"Confidence: {result.confidence:.1%}")
-print(f"Reasoning: {result.reasoning}")
+supplier = SupplierAgent()
+supplier.set_up()
+
+# Find compliance requirements
+requirements = producer.query("EU compliance requirements for Vitamin D3")
+
+# Analyze specific suppliers
+compliance_data = supplier.query("Check DSM website for Vitamin D3 compliance certifications")
 ```
 
-#### Enhanced Usage
+### Evidence Cache Integration
 
 ```python
-from agents.enhanced_compliance_agent import EnhancedComplianceAgent
+from backend.enrichment.supplier_cache import SupplierEvidenceCache
 
-# Create agent with multiple data sources
-agent = EnhancedComplianceAgent(data_sources=[
-    {"path": "data/suppliers.csv"},
-    {"path": "data/external_evidence.json"},
-])
+# Load cached evidence
+cache = SupplierEvidenceCache()
+evidence = cache.load_evidence()
 
-# Enhanced compliance check with detailed results
-result = agent.check_compliance_enhanced("DSM", "PharmaCorp")
+# Query by supplier
+dsm_evidence = cache.get_evidence_for_supplier("DSM")
+print(f"Certifications: {dsm_evidence.quality_certifications}")
 
-print(f"Overall Score: {result.overall_score:.3f}")
-print(f"Plugin Results: {len(result.plugin_results)}")
-
-# Rank all suppliers for a customer
-rankings = agent.rank_suppliers("PharmaCorp", limit=5)
-for rank, (supplier, result) in enumerate(rankings, 1):
-    print(f"{rank}. {supplier}: {result.overall_score:.3f}")
+# Find cost-effective suppliers
+best_value = cache.get_most_cost_effective("Vitamin D3")
+premium_suppliers = cache.get_premium_suppliers("Vitamin D3")
 ```
 
-### Architecture
+## Key Features
 
-#### Core Components
+### 🌐 Live Web Search
+- Real-time Google Search integration
+- Dynamic regulatory requirement discovery
+- Current compliance standard tracking
 
-1. **Data Models** (`agents/core/data_models.py`)
-   - Unified data structures for suppliers, customers, and results
-   - Type-safe dataclasses with metadata tracking
+### 🏭 Supplier Website Analysis  
+- Direct supplier website content extraction
+- Automated compliance certification detection
+- Real-time data validation
 
-2. **Plugin System** (`agents/plugins/`)
-   - `base.py`: Abstract plugin interface
-   - `certificates.py`: Certificate compliance checking
-   - Extensible for additional compliance factors
+### 💾 Evidence Cache
+- Persistent supplier intelligence storage
+- Fast query and filtering capabilities
+- Cost-effectiveness analysis
 
-3. **Data Sources** (`agents/data_sources/`)
-   - `manager.py`: Multi-source data aggregation with conflict resolution
-   - `csv_adapter.py`: CSV file adapter
-   - `json_adapter.py`: JSON file adapter
+### 🎯 Compliance Focus
+- **EU**: Pre-market authorization, EFSA safety, traceability requirements
+- **US**: Post-market cGMP (21 CFR 111), ID/purity testing, supplier qualification
 
-4. **Scoring Engine** (`agents/scoring/engine.py`)
-   - Configurable weights and aggregation methods
-   - Confidence penalty system
-   - Multiple ranking strategies
-
-5. **Compliance Engine** (`agents/engine/compliance_engine.py`)
-   - Core orchestration of plugins, data, and scoring
-   - Batch analysis and ranking capabilities
-
-6. **Enhanced Agent** (`agents/enhanced_compliance_agent.py`)
-   - Main public interface with backward compatibility
-   - Automatic mode detection and fallback
-
-### Testing
+## Installation
 
 ```bash
-# Simple data validation
-python simple_test.py
+# Install Google ADK dependencies
+pip install google-adk
 
-# Full integration demonstration  
-python demo_enhanced_compliance.py
+# Install Vertex AI requirements  
+pip install vertexai
 
-# Integration validation
-python -c "from agents.integration.data_integration import run_integration_validation; run_integration_validation()"
+# Set up authentication
+gcloud auth application-default login
 ```
 
-### Migration from SimpleComplianceChecker
+## System Requirements
 
-The Enhanced Compliance Agent is designed for seamless migration:
-
-#### Before (SimpleComplianceChecker)
-```python
-from simple_compliance_checker import SimpleComplianceChecker
-
-checker = SimpleComplianceChecker()
-result = checker.check("Vitamin D3", "DSM", "PharmaCorp")
-```
-
-#### After (Enhanced Agent)
-```python
-from agents.enhanced_compliance_agent import call_compliance_agent
-
-# Exact same interface - enhanced automatically when data sources available
-result = call_compliance_agent("Vitamin D3", "DSM", "PharmaCorp")
-```
-
-No code changes required! The enhanced system automatically detects available data sources and falls back to legacy mode if enhanced features unavailable.
-
-### File Structure
-
-```
-makeathon/
-├── agents/
-│   ├── core/
-│   │   ├── __init__.py
-│   │   └── data_models.py
-│   ├── plugins/
-│   │   ├── __init__.py
-│   │   ├── base.py
-│   │   └── certificates.py
-│   ├── data_sources/
-│   │   ├── __init__.py
-│   │   ├── base.py
-│   │   ├── csv_adapter.py
-│   │   ├── json_adapter.py
-│   │   └── manager.py
-│   ├── scoring/
-│   │   ├── __init__.py
-│   │   └── engine.py
-│   ├── engine/
-│   │   ├── __init__.py
-│   │   └── compliance_engine.py
-│   ├── integration/
-│   │   ├── __init__.py
-│   │   ├── data_integration.py
-│   │   └── legacy_csv_adapter.py
-│   ├── enhanced_compliance_agent.py
-│   └── simple_compliance_checker.py (original)
-├── data/
-│   ├── suppliers.csv
-│   ├── customer_requirements.csv
-│   └── external_evidence.json
-├── tests/
-│   ├── core/
-│   ├── plugins/
-│   └── test_agents/
-├── simple_test.py
-├── demo_enhanced_compliance.py
-└── README.md
-```
-
-## Original Project Components
-
-The makeathon project also includes other analysis components for vitamin D clustering, supplier caching, and data pipeline processing. See individual module documentation for details.
+- Google Cloud Project with Vertex AI API enabled
+- Agent Development Kit (ADK) access
+- Gemini 2.5 Flash model access
