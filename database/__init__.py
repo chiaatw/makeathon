@@ -14,10 +14,12 @@ SKU pattern: RM-C{company_id}-{substance}-{variant}-{hash}
 Example: RM-C1-vitamin-d3-cholecalciferol-1000iu-15a7d2b1
 """
 
-from .models import Company, Product, BOM, BOMComponent, Supplier, SupplierProduct
+from .models import Company, Product, BOM, BOMComponent, Supplier, SupplierProduct, CanonicalMaterialSupplierMap
 from .connection import get_database_session, get_database_url, get_engine
+from .vitamin_d_queries import VitaminDExtractor, VitaminDProduct
 
 __all__ = [
-    'Company', 'Product', 'BOM', 'BOMComponent', 'Supplier', 'SupplierProduct',
-    'get_database_session', 'get_database_url', 'get_engine'
+    'Company', 'Product', 'BOM', 'BOMComponent', 'Supplier', 'SupplierProduct', 'CanonicalMaterialSupplierMap',
+    'get_database_session', 'get_database_url', 'get_engine',
+    'VitaminDExtractor', 'VitaminDProduct'
 ]
