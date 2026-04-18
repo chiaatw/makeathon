@@ -1,0 +1,76 @@
+{
+  "suppliers": [
+    {
+      "supplier_name": "DSM",
+      "substance": "Vitamin D3",
+      "quality_certifications": ["USP", "ISO 9001", "FDA-registered"],
+      "compliance_notes": "Premium supplier, meets all USP and FDA requirements. Specialty chemicals for pharmaceutical and supplement applications.",
+      "pricing_range_per_kg": "$45-55",
+      "moq_units": 100,
+      "lead_time_days": 21
+    },
+    {
+      "supplier_name": "BASF",
+      "substance": "Vitamin D3",
+      "quality_certifications": ["USP", "ISO 9001", "GMP"],
+      "compliance_notes": "Global specialty chemicals leader. High-quality vitamin D3 with consistent batch performance. Excellent documentation.",
+      "pricing_range_per_kg": "$42-48",
+      "moq_units": 200,
+      "lead_time_days": 28
+    },
+    {
+      "supplier_name": "Fermenta",
+      "substance": "Vitamin D3",
+      "quality_certifications": ["USP", "ISO 9001"],
+      "compliance_notes": "Reliable supplier with good compliance record. Some documentation delays in past. Suitable for mid-volume applications.",
+      "pricing_range_per_kg": "$35-42",
+      "moq_units": 300,
+      "lead_time_days": 35
+    },
+    {
+      "supplier_name": "Zhejiang Medicine",
+      "substance": "Vitamin D3",
+      "quality_certifications": ["ISO 9001"],
+      "compliance_notes": "Cost-competitive supplier. Quality is adequate but documentation could be more comprehensive. Suitable for price-sensitive applications.",
+      "pricing_range_per_kg": "$28-35",
+      "moq_units": 500,
+      "lead_time_days": 42
+    },
+    {
+      "supplier_name": "Prinova USA",
+      "substance": "Vitamin D3",
+      "quality_certifications": ["GMP", "NSF", "Kosher"],
+      "compliance_notes": "Specialty distributor known for supplement industry applications. Good technical support and regulatory expertise.",
+      "pricing_range_per_kg": "$50-65",
+      "moq_units": 50,
+      "lead_time_days": 14
+    },
+    {
+      "supplier_name": "PureBulk",
+      "substance": "Vitamin D3",
+      "quality_certifications": ["GMP", "Organic-certified"],
+      "compliance_notes": "Supplier for natural and organic products. Higher standards for purity. Smaller MOQs but premium pricing.",
+      "pricing_range_per_kg": "$60-75",
+      "moq_units": 25,
+      "lead_time_days": 10
+    },
+    {
+      "supplier_name": "Ashland",
+      "substance": "Vitamin D3",
+      "quality_certifications": ["USP", "ISO 9001", "GMP"],
+      "compliance_notes": "Specialty ingredients for dietary supplements. Strong quality control. Good for branded product requirements.",
+      "pricing_range_per_kg": "$48-58",
+      "moq_units": 150,
+      "lead_time_days": 24
+    },
+    {
+      "supplier_name": "Taiyo Kagaku",
+      "substance": "Vitamin D3",
+      "quality_certifications": ["USP", "ISO 9001", "Halal", "Kosher"],
+      "compliance_notes": "Japanese supplier with excellent quality standards. Multi-certification capability. Premium pricing but highest reliability.",
+      "pricing_range_per_kg": "$55-70",
+      "moq_units": 100,
+      "lead_time_days": 32
+    }
+  ]
+}
