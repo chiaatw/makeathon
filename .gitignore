@@ -54,3 +54,4 @@ env/
 # Cache
 .pytest_cache/
 .claude/
+.worktrees/
