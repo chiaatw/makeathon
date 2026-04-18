@@ -7,7 +7,7 @@ import { AnalysisStepper } from "./AnalysisStepper";
 import { RecommendationCard } from "./RecommendationCard";
 import { ReasonList, RiskList, EvidenceList } from "./InsightLists";
 import { TradeoffCards } from "./TradeoffCards";
-import { createAnalysisEventSource, getAnalysisStatus, startAnalysis } from "@/lib/api";
+import { createAnalysisEventSource, getAnalysisStatus, startAnalysis } from "../../lib/api";
 
 export const AnalysisScreen = ({
   data,

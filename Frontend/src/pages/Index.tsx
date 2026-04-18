@@ -3,7 +3,7 @@ import { AppHeader } from "@/components/agnes/AppHeader";
 import { InputScreen } from "@/components/agnes/InputScreen";
 import { AnalysisScreen } from "@/components/agnes/AnalysisScreen";
 import { DEFAULT_CASE, EnumsResponse, SourcingCase } from "@/lib/agnes-data";
-import { getEnums } from "@/lib/api";
+import { getEnums } from "../lib/api";
 
 const Index = () => {
   const [view, setView] = useState<"input" | "analysis">("input");
