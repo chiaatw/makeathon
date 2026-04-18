@@ -7,7 +7,7 @@ definitions and include metadata for transparency.
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 
 @dataclass
@@ -41,34 +41,6 @@ class PricingInfo:
 
 
 @dataclass
-class QualityInfo:
-    """Represents quality metrics for a supplier's products.
-
-    Attributes:
-        defect_rate: Percentage of defective units (0-1 scale)
-        on_time_delivery_rate: Percentage of on-time deliveries (0-1 scale)
-        quality_certifications: List of quality-related certifications
-    """
-    defect_rate: float
-    on_time_delivery_rate: float
-    quality_certifications: List[str] = field(default_factory=list)
-
-
-@dataclass
-class DeliveryInfo:
-    """Represents delivery capabilities and terms.
-
-    Attributes:
-        lead_time_days: Standard lead time in days
-        shipping_methods: Available shipping methods (e.g., ["Sea", "Air"])
-        incoterms: Trade terms (e.g., "FOB", "CIF")
-    """
-    lead_time_days: int
-    shipping_methods: List[str] = field(default_factory=list)
-    incoterms: str = ""
-
-
-@dataclass
 class SupplierData:
     """Complete supplier information for compliance analysis.
 
@@ -80,8 +52,8 @@ class SupplierData:
         country: Supplier's country of operation
         certificates: List of certifications held
         pricing: Pricing information
-        quality_metrics: Quality performance metrics
-        delivery_info: Delivery capabilities and terms
+        quality_metrics: Quality performance metrics (flexible structure)
+        delivery_info: Delivery capabilities and terms (flexible structure)
         data_sources: List of sources where data was gathered
         confidence_breakdown: Confidence scores for different data aspects
         last_updated: Timestamp of last data update
@@ -89,12 +61,12 @@ class SupplierData:
     name: str
     country: str
     certificates: List[Certificate] = field(default_factory=list)
-    pricing: PricingInfo | None = None
-    quality_metrics: QualityInfo | None = None
-    delivery_info: DeliveryInfo | None = None
+    pricing: Optional[PricingInfo] = None
+    quality_metrics: Optional[Dict[str, Any]] = None
+    delivery_info: Optional[Dict[str, Any]] = None
     data_sources: List[str] = field(default_factory=list)
     confidence_breakdown: Dict[str, float] = field(default_factory=dict)
-    last_updated: datetime | None = None
+    last_updated: Optional[datetime] = None
 
 
 @dataclass

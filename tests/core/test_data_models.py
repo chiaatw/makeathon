@@ -5,8 +5,6 @@ from datetime import datetime, timedelta
 from makeathon.agents.core.data_models import (
     Certificate,
     PricingInfo,
-    QualityInfo,
-    DeliveryInfo,
     SupplierData,
     CustomerRequirements,
     PluginResult,
@@ -46,36 +44,6 @@ class TestPricingInfo:
         assert pricing.moq == 100
 
 
-class TestQualityInfo:
-    """Test QualityInfo model."""
-
-    def test_quality_info_creation(self):
-        """Test creating a QualityInfo instance."""
-        quality = QualityInfo(
-            defect_rate=0.5,
-            on_time_delivery_rate=0.95,
-            quality_certifications=["ISO 9001", "ISO 14001"],
-        )
-        assert quality.defect_rate == 0.5
-        assert quality.on_time_delivery_rate == 0.95
-        assert quality.quality_certifications == ["ISO 9001", "ISO 14001"]
-
-
-class TestDeliveryInfo:
-    """Test DeliveryInfo model."""
-
-    def test_delivery_info_creation(self):
-        """Test creating a DeliveryInfo instance."""
-        delivery = DeliveryInfo(
-            lead_time_days=14,
-            shipping_methods=["Sea", "Air"],
-            incoterms="FOB",
-        )
-        assert delivery.lead_time_days == 14
-        assert delivery.shipping_methods == ["Sea", "Air"]
-        assert delivery.incoterms == "FOB"
-
-
 class TestSupplierData:
     """Test SupplierData model."""
 
@@ -92,24 +60,24 @@ class TestSupplierData:
             currency="USD",
             moq=100,
         )
-        quality = QualityInfo(
-            defect_rate=0.5,
-            on_time_delivery_rate=0.95,
-            quality_certifications=["ISO 9001"],
-        )
-        delivery = DeliveryInfo(
-            lead_time_days=14,
-            shipping_methods=["Sea"],
-            incoterms="FOB",
-        )
+        quality_metrics = {
+            "defect_rate": 0.5,
+            "on_time_delivery_rate": 0.95,
+            "quality_certifications": ["ISO 9001"],
+        }
+        delivery_info = {
+            "lead_time_days": 14,
+            "shipping_methods": ["Sea"],
+            "incoterms": "FOB",
+        }
 
         supplier = SupplierData(
             name="Acme Manufacturing",
             country="China",
             certificates=[cert],
             pricing=pricing,
-            quality_metrics=quality,
-            delivery_info=delivery,
+            quality_metrics=quality_metrics,
+            delivery_info=delivery_info,
             data_sources=["supplier_portal", "third_party_audit"],
             confidence_breakdown={
                 "certificates": 0.95,
@@ -124,8 +92,8 @@ class TestSupplierData:
         assert len(supplier.certificates) == 1
         assert supplier.certificates[0].name == "ISO 9001"
         assert supplier.pricing.min_price == 10.0
-        assert supplier.quality_metrics.defect_rate == 0.5
-        assert supplier.delivery_info.lead_time_days == 14
+        assert supplier.quality_metrics["defect_rate"] == 0.5
+        assert supplier.delivery_info["lead_time_days"] == 14
         assert supplier.data_sources == ["supplier_portal", "third_party_audit"]
         assert supplier.confidence_breakdown["certificates"] == 0.95
         assert supplier.last_updated == datetime(2026, 4, 18)

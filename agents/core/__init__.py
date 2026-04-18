@@ -3,8 +3,6 @@
 from .data_models import (
     Certificate,
     PricingInfo,
-    QualityInfo,
-    DeliveryInfo,
     SupplierData,
     CustomerRequirements,
     PluginResult,
@@ -14,8 +12,6 @@ from .data_models import (
 __all__ = [
     "Certificate",
     "PricingInfo",
-    "QualityInfo",
-    "DeliveryInfo",
     "SupplierData",
     "CustomerRequirements",
     "PluginResult",
