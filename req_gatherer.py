@@ -123,10 +123,11 @@ class SupplierAgent:
           ''
       ),
       sub_agents=[],
-      instruction='''Search web to infer EU/US compliance levels a raw material satisfies.
+      instruction='''For EACH provided supplier, search THEIR SPECIFIC WEBSITE to find the exact raw material.
+Extract the actual EU/US compliance levels the product satisfies based on their site.
 EU: pre-market, authorized, food-grade, traceable, EFSA.
 US: cGMP (21 CFR 111), ID/purity tests, qualified supplier. 
-Evaluate raw material against these and be highly concise.''',
+Extract raw material compliance data directly from each supplier's website and be highly concise. Do not guess.''',
       tools=[
         agent_tool.AgentTool(agent=requirements_satisfier_google_search_agent),
         agent_tool.AgentTool(agent=requirements_satisfier_url_context_agent)

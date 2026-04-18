@@ -37,4 +37,26 @@ FROM Supplier_Product sp
 JOIN Supplier s ON sp.SupplierId = s.Id
 WHERE sp.ProductId = 506; -- Replace 506 with your Raw Material Id
 
+-- ---------------------------------------------------------------------
+-- Given a list of companies, find all their finished goods, 
+-- the raw materials they are made from, and all potential suppliers for those materials.
+-- ---------------------------------------------------------------------
+SELECT 
+    fg.Id AS FinishedGood_Id,
+    fg.SKU AS FinishedGood_SKU,
+    c.Name AS FinishedGood_Company,
+    rm.Id AS RawMaterial_Id,
+    rm.SKU AS RawMaterial_SKU,
+    rm.canonical_material_name AS RawMaterial_Name,
+    GROUP_CONCAT(DISTINCT s.Name) AS Potential_Suppliers
+FROM Company c
+JOIN Product fg ON c.Id = fg.CompanyId
+JOIN BOM b ON fg.Id = b.ProducedProductId
+JOIN BOM_Component bc ON b.Id = bc.BOMId
+JOIN Product rm ON bc.ConsumedProductId = rm.Id
+LEFT JOIN Supplier_Product sp ON rm.Id = sp.ProductId
+LEFT JOIN Supplier s ON sp.SupplierId = s.Id
+WHERE c.Name IN ('NOW Foods', 'Animal') -- Replace with your desired Company names
+GROUP BY fg.Id, rm.Id;
+
 
