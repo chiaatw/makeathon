@@ -20,7 +20,7 @@ class AnalyzeRequest(BaseModel):
     company: str
     product_sku: str
 
-@app.get("/api/products/{company}")
+@app.get("/api/products")
 async def get_products(company: str):
     conn = get_db_connection()
     cursor = conn.cursor()

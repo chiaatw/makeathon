@@ -107,7 +107,7 @@ export const AnalysisScreen = ({
               <>
                 {/* Currently passing mocked data to the cards below. In the next step we will read from backendData */}
                 <TradeoffCards backendData={backendData} />
-                <RecommendationCard data={data} />
+                <RecommendationCard data={data} backendData={backendData} />
                 <div className="grid grid-cols-2 gap-6">
                   <ReasonList />
                   <RiskList />

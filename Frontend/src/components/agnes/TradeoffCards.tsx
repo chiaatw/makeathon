@@ -78,41 +78,46 @@ export const TradeoffCards = ({ backendData }: { backendData?: any }) => {
                 <div className="text-sm uppercase tracking-wide font-bold text-muted-foreground mb-3">
                   Raw Material: {rmItem.raw_material_sku || "Unknown"}
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  {suppliers.map((s: any, sIdx: number) => (
-                    <div
-                      key={sIdx}
-                      className="rounded-lg bg-secondary/30 border border-border/50 p-4"
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <Factory className="w-4 h-4 text-muted-foreground" />
-                        <span className="font-semibold text-foreground">
-                          {s.supplier}
-                        </span>
-                      </div>
-                      <div className="text-xs text-muted-foreground mb-2">
-                        Verified Compliance:
-                      </div>
-                      <ul className="space-y-1.5 list-none">
-                        {(s.fulfilled_compliance || []).map(
-                          (fc: string, fcIdx: number) => (
-                            <li
-                              key={fcIdx}
-                              className="flex gap-2 text-xs items-start"
-                            >
-                              <CheckCircle2 className="w-3.5 h-3.5 text-success shrink-0 mt-0.5" />
-                              <span className="text-foreground">{fc}</span>
-                            </li>
-                          ),
-                        )}
-                        {!(s.fulfilled_compliance || []).length && (
-                          <span className="text-xs text-muted-foreground italic">
-                            None explicitly found.
+                        <div className="grid grid-cols-2 gap-4">
+                  {suppliers.map((s: any, sIdx: number) => {
+                    const matchCount = (s.fulfilled_compliance || []).length;
+                    const isMatched = matchCount > 0;
+                    
+                    return (
+                      <div
+                        key={sIdx}
+                        className={`rounded-lg bg-secondary/30 border p-4 ${isMatched ? "border-success/50 bg-success/5 shadow-sm" : "border-destructive/30 opacity-70"}`}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <Factory className={`w-4 h-4 ${isMatched ? "text-success" : "text-muted-foreground"}`} />
+                          <span className={`font-semibold ${isMatched ? "text-success-foreground" : "text-foreground"}`}>
+                            {s.supplier}
                           </span>
-                        )}
-                      </ul>
-                    </div>
-                  ))}
+                        </div>
+                        <div className="text-xs text-muted-foreground mb-2">
+                          Verified Compliance:
+                        </div>
+                        <ul className="space-y-1.5 list-none">
+                          {(s.fulfilled_compliance || []).map(
+                            (fc: string, fcIdx: number) => (
+                              <li
+                                key={fcIdx}
+                                className="flex gap-2 text-xs items-start"
+                              >
+                                <CheckCircle2 className="w-3.5 h-3.5 text-success shrink-0 mt-0.5" />
+                                <span className="text-foreground">{fc}</span>
+                              </li>
+                            ),
+                          )}
+                          {!isMatched && (
+                            <span className="text-xs text-destructive/80 italic font-medium">
+                              Does not explicitly fulfill constraints.
+                            </span>
+                          )}
+                        </ul>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );

@@ -14,12 +14,14 @@ export const InputCard = ({
   const [products, setProducts] = useState<string[]>([]);
 
   useEffect(() => {
+    let active = true;
     if (data.company) {
       fetch(
-        `http://localhost:8000/api/products/${encodeURIComponent(data.company)}`,
+        `http://localhost:8000/api/products?company=${encodeURIComponent(data.company)}`,
       )
         .then((res) => res.json())
         .then((json) => {
+          if (!active) return;
           if (json.products && json.products.length > 0) {
             setProducts(json.products);
             // Ensure the currently selected product is valid for this company
@@ -31,13 +33,17 @@ export const InputCard = ({
           }
         })
         .catch((err) => {
+          if (!active) return;
           console.error("Failed to fetch products", err);
           setProducts([]);
         });
     } else {
       setProducts([]);
     }
-  }, [data.company]);
+    return () => {
+      active = false;
+    };
+  }, [data.company, data.product]);
 
   return (
     <Card className="p-7 shadow-elegant border-border/70 bg-card animate-fade-up">
@@ -59,7 +65,7 @@ export const InputCard = ({
         <SelectField
           label="Company"
           value={data.company}
-          onChange={(v) => onChange({ company: v, product: "" })}
+          onChange={(v) => onChange({ company: v })}
           options={COMPANIES}
         />
         <SelectField
