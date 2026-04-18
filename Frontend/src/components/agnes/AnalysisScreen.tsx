@@ -1,12 +1,9 @@
 import { Button } from "@/components/ui/button";
-<<<<<<< HEAD
 import { ANALYSIS_STEPS, AnalysisResult, SourcingCase } from "@/lib/agnes-data";
-=======
-import { SourcingCase } from "@/lib/agnes-data";
->>>>>>> cd98d932d8b724f66afd788683a78074649a63a7
 import { useEffect, useState } from "react";
 import { ArrowLeft, RefreshCw, AlertCircle } from "lucide-react";
 import { CaseSummary } from "./CaseSummary";
+import { AnalysisStepper } from "./AnalysisStepper";
 import { RecommendationCard } from "./RecommendationCard";
 import { ReasonList, RiskList, EvidenceList } from "./InsightLists";
 import { TradeoffCards } from "./TradeoffCards";
@@ -23,18 +20,14 @@ export const AnalysisScreen = ({
   onAnother: () => void;
   analysisSteps?: readonly string[];
 }) => {
+  const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
-<<<<<<< HEAD
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-=======
-  const [error, setError] = useState<string | null>(null);
-  const [backendData, setBackendData] = useState<any>(null);
->>>>>>> cd98d932d8b724f66afd788683a78074649a63a7
 
   useEffect(() => {
+    setStep(0);
     setDone(false);
-<<<<<<< HEAD
     setResult(null);
     setError(null);
 
@@ -87,50 +80,6 @@ export const AnalysisScreen = ({
 
     return () => {
       eventSource?.close();
-=======
-    setError(null);
-    let isMounted = true;
-
-    async function fetchData() {
-      try {
-        const res = await fetch("http://localhost:8000/api/analyze", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            company: data.company,
-            product_sku: data.product,
-          }),
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch analysis.");
-        }
-
-        const result = await res.json();
-
-        if (result.error) {
-          throw new Error(result.error);
-        }
-
-        if (isMounted) {
-          setBackendData(result);
-          setDone(true);
-        }
-      } catch (e: any) {
-        if (isMounted) {
-          setError(e.message);
-          setDone(true);
-        }
-      }
-    }
-
-    fetchData();
-
-    return () => {
-      isMounted = false;
->>>>>>> cd98d932d8b724f66afd788683a78074649a63a7
     };
   }, [data]);
 
@@ -163,29 +112,11 @@ export const AnalysisScreen = ({
       <CaseSummary data={data} />
 
       <div className="grid grid-cols-3 gap-7">
-<<<<<<< HEAD
         <div className="col-span-1">
           <AnalysisStepper currentStep={step} done={done} steps={analysisSteps} />
         </div>
 
         <div className="col-span-2 space-y-6">
-          {done ? (
-            <>
-              <RecommendationCard
-                data={data}
-                status={result?.recommendation.status}
-                confidence={result?.recommendation.confidence}
-                recommendationText={result?.recommendation.recommendation_text}
-              />
-              <div className="grid grid-cols-2 gap-6">
-                <ReasonList reasons={result?.reasons} />
-                <RiskList risks={result?.risks} />
-              </div>
-              <EvidenceList items={result?.evidence} />
-              <TradeoffCards tradeoffs={result?.tradeoffs} />
-            </>
-=======
-        <div className="col-span-3 space-y-6">
           {done ? (
             error ? (
               <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-6 flex items-center text-destructive">
@@ -193,18 +124,21 @@ export const AnalysisScreen = ({
                 <span>{error}</span>
               </div>
             ) : (
-              <>
-                {/* Currently passing mocked data to the cards below. In the next step we will read from backendData */}
-                <TradeoffCards backendData={backendData} />
-                <RecommendationCard data={data} />
-                <div className="grid grid-cols-2 gap-6">
-                  <ReasonList />
-                  <RiskList />
-                </div>
-                <EvidenceList />
-              </>
+            <>
+              <RecommendationCard
+                data={data}
+                status={result?.recommendation.status}
+                confidence={result?.recommendation.confidence}
+                recommendationText={result?.recommendation.recommendation_text}
+              />
+              <TradeoffCards tradeoffs={result?.tradeoffs} backendData={result?.raw} />
+              <div className="grid grid-cols-2 gap-6">
+                <ReasonList reasons={result?.reasons} />
+                <RiskList risks={result?.risks} />
+              </div>
+              <EvidenceList items={result?.evidence} />
+            </>
             )
->>>>>>> cd98d932d8b724f66afd788683a78074649a63a7
           ) : (
             <div className="rounded-xl border border-border/70 bg-card shadow-elegant p-12 flex flex-col items-center justify-center text-center min-h-[400px]">
               <div className="relative h-16 w-16 mb-5">

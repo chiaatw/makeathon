@@ -74,14 +74,8 @@ export const RecommendationCard = ({
               </span>
             </div>
             <h2 className="text-xl font-semibold tracking-tight text-foreground leading-snug">
-<<<<<<< HEAD
               {recommendationText ??
                 `${data.supplier} appears to be a viable candidate for ${data.ingredient.replace("-", " ")} based on functional similarity and available evidence, but certification verification remains incomplete.`}
-=======
-              The {data.product} finished good from {data.company} appears
-              viable based on functional similarity and available evidence, but
-              certification verification remains incomplete.
->>>>>>> cd98d932d8b724f66afd788683a78074649a63a7
             </h2>
           </div>
 
